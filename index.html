@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>اختبار الصحصحة</title>
+<meta property="og:title" content="اختبار الصحصحة">
+<meta property="og:description" content="قبل موعد البوث… خلنا نتأكد إنك صاحي">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&family=Reem+Kufi:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0F0A24;--card:#1C1440;--line:#3A2C70;--text:#F3EEFF;--soft:#E7E0FA;--muted:#B9AEDB;--accent:#C4A8FF;--btn:#8B5CF6;--good:#5EE6D0;--bad:#FF8A9B}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:'IBM Plex Sans Arabic',system-ui,sans-serif}
+  .page{min-height:100vh;padding:32px 16px 56px;display:flex;align-items:center}
+  .wrap{width:100%;max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+  p{margin:0;line-height:1.7}
+  h1{margin:0;font-family:'Reem Kufi',sans-serif;line-height:1.2;color:var(--accent)}
+  .kicker{font-size:16px;font-weight:500;color:var(--accent)}
+  .lead{font-size:18px;color:var(--soft)}
+
+  /* phone chat */
+  .phone{background:#0B141A;border:1px solid #23303A;border-radius:28px;overflow:hidden}
+  .chat-head{display:flex;align-items:center;gap:12px;padding:14px 16px;background:#1F2C34}
+  .avatar{width:42px;height:42px;border-radius:50%;background:#53636E;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .who{display:flex;flex-direction:column}
+  .who b{font-size:16px;direction:ltr;text-align:right}
+  .who span{font-size:13px;color:#9FB0BA}
+  .chat{padding:16px 12px;display:flex;flex-direction:column;gap:10px;min-height:260px}
+  .sys{align-self:center;font-size:12px;color:#9FB0BA;background:#182229;padding:4px 12px;border-radius:8px}
+  .bubble{max-width:85%;padding:10px 14px 6px;border-radius:14px;font-size:16px;line-height:1.7;opacity:0;transform:translateY(6px);transition:all .35s}
+  .bubble.show{opacity:1;transform:none}
+  .in{align-self:flex-start;background:#202C33;border-top-right-radius:4px}
+  .phone{position:relative}
+  .notif-zone{max-height:0;overflow:hidden;transition:max-height .5s ease;background:#0B141A}
+  .notif-zone.show{max-height:160px}
+  .notif{margin:10px;padding:12px 14px;border-radius:20px;background:rgba(58,58,64,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 8px 24px rgba(0,0,0,.45);display:flex;gap:12px;align-items:flex-start;transform:translateY(-120%);opacity:0;transition:transform .5s cubic-bezier(.2,.9,.3,1.2),opacity .3s}
+  .notif-zone.show .notif{transform:none;opacity:1}
+  .notif.buzz{animation:buzz .35s linear 2}
+  @keyframes buzz{0%,100%{translate:0}25%{translate:-3px}75%{translate:3px}}
+  .app-icon{width:38px;height:38px;border-radius:10px;background:linear-gradient(#5BF675,#0CBD2A);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .notif-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+  .notif-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .notif-top b{font-size:15px;color:#fff;direction:ltr}
+  .notif-top span{font-size:12px;color:#C9C9CF}
+  .notif-text{font-size:15px;line-height:1.6;color:#EDEDF2}
+  .code{font-weight:700;letter-spacing:2px;direction:ltr;display:inline-block;color:#fff}
+  .time{display:block;text-align:left;font-size:11px;color:#8696A0;margin-top:2px}
+  .typing{align-self:flex-start;background:#202C33;border-radius:14px;padding:10px 14px;font-size:14px;color:#9FB0BA;display:none}
+  .timer{align-self:center;font-size:14px;font-weight:700;color:#FFB547;background:#2A2210;border:1px solid #5A4720;padding:6px 14px;border-radius:99px;display:none}
+  .actions{padding:12px;display:none;flex-direction:column;gap:10px;border-top:1px solid #23303A;background:#111B21}
+  button{font-family:inherit;min-height:54px;border-radius:14px;font-size:17px;cursor:pointer}
+  .primary{border:0;background:#00A884;color:#fff;font-weight:700}
+  .ghost{border:1px solid #3A4A54;background:transparent;color:var(--text);font-weight:500}
+
+  /* reveal */
+  .reveal{border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:10px}
+  .reveal.fell{background:#2A1030;border:1px solid #7A2E4E}
+  .reveal.safe{background:#0F2A2A;border:1px solid #2B6B66}
+  .reveal h2{margin:0;font-family:'Reem Kufi',sans-serif;font-size:28px}
+  .fell h2{color:var(--bad)}.safe h2{color:var(--good)}
+  .reveal p{font-size:17px;color:#EDE6FA}
+  .tricks{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:12px}
+  .tricks h3{margin:0;font-size:19px}
+  .trick{display:flex;gap:12px;align-items:flex-start}
+  .num{width:30px;height:30px;border-radius:50%;background:#2A2050;color:var(--accent);font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px}
+  .trick b{display:block;font-size:16px}
+  .trick span{font-size:15px;color:var(--muted);line-height:1.6}
+  .details{display:flex;flex-wrap:wrap;gap:12px}
+  .d{flex:1 1 140px;border-radius:16px;background:var(--card);border:1px solid var(--line);padding:16px;display:flex;flex-direction:column;gap:4px}
+  .d small{font-size:14px;color:var(--muted)}
+  .d b{font-size:18px}
+  .foot{border-top:1px solid var(--line);padding-top:18px;display:flex;flex-direction:column;gap:6px}
+  .foot b{font-size:22px}.foot span{font-size:15px;color:var(--muted)}
+  #invite{display:none;flex-direction:column;gap:22px}
+  .fade{animation:f .45s ease}
+  @keyframes f{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="page"><div class="wrap">
+
+  <div id="test" style="display:flex;flex-direction:column;gap:22px">
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div class="kicker">قبل الموعد…</div>
+      <h1 style="font-size:40px">اختبار الصحصحة</h1>
+      <p class="lead">تخيّل هذا جوالك الحين. اقرأ اللي يوصلك، وقرر وش بتسوي.</p>
+    </div>
+
+    <div class="phone">
+      <div class="notif-zone" id="notifZone">
+        <div class="notif" id="notif">
+          <div class="app-icon"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M12 3C6.5 3 2 6.6 2 11c0 2.5 1.4 4.7 3.7 6.1-.2 1.3-.8 2.6-1.9 3.6 2.1-.1 3.9-.9 5.1-2 1 .2 2 .3 3.1.3 5.5 0 10-3.6 10-8S17.5 3 12 3z"/></svg></div>
+          <div class="notif-body">
+            <div class="notif-top"><b>Verify</b><span>الآن</span></div>
+            <div class="notif-text">رمز التحقق الخاص بك: <span class="code">482913</span><br>لا تشارك هذا الرمز مع أي أحد.</div>
+          </div>
+        </div>
+      </div>
+      <div class="chat-head">
+        <div class="avatar"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#DCE3E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div>
+        <div class="who"><b>+966 5X XXX 4417</b><span id="status">متصل الآن</span></div>
+      </div>
+      <div class="chat" id="chat">
+        <div class="sys">اليوم</div>
+        <div class="bubble in" id="b1">السلام عليكم، معك ريم من فريق تنظيم فعالية البوثات بالجامعة 🌷
+          <span class="time">2:42 م</span></div>
+        <div class="bubble in" id="b2">سجّلنا اسمك بقائمة الحضور، بس النظام أرسل لك رمز تأكيد المقعد على جوالك بالغلط بدل ما يوصلني
+          <span class="time">2:42 م</span></div>
+        <div class="bubble in" id="b3">ممكن ترسل لي الرمز بسرعة؟ المقاعد محدودة والقائمة تتقفل بعد ٥ دقايق وما أبي يروح مقعدك 🙏
+          <span class="time">2:43 م</span></div>
+        <div class="typing" id="typing">يكتب…</div>
+        <div class="timer" id="timer">القائمة تتقفل بعد <span id="clock">5:00</span></div>
+      </div>
+      <div class="actions" id="actions">
+        <button class="primary" onclick="show('fell')">أرسل لها الرمز 482913</button>
+        <button class="ghost" onclick="show('safe')">ما أرسله، وأتأكد من الجامعة بنفسي</button>
+      </div>
+    </div>
+  </div>
+
+  <section id="invite">
+    <div id="reveal" class="reveal"><h2 id="rh"></h2><p id="rt"></p></div>
+
+    <div class="tricks">
+      <h3>الحيل اللي انلعبت عليك في دقيقة وحدة:</h3>
+      <div class="trick"><div class="num">١</div><div><b>انتحال صفة</b><span>"ريم من فريق التنظيم" اسم ودود وجهة تعرفها، عشان تثق بدون ما تتأكد.</span></div></div>
+      <div class="trick"><div class="num">٢</div><div><b>قصة مقنعة</b><span>"النظام أرسله بالغلط" عذر يخلي طلب الرمز يبان طبيعي.</span></div></div>
+      <div class="trick"><div class="num">٣</div><div><b>الاستعجال والندرة</b><span>العداد و"المقاعد محدودة" عشان تقرر بسرعة قبل لا تفكر.</span></div></div>
+      <div class="trick"><div class="num">٤</div><div><b>الدليل كان قدامك</b><span>الرسالة نفسها قالت: لا تشارك هذا الرمز مع أي أحد.</span></div></div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div class="kicker">ندعوك لبوث</div>
+      <h1 style="font-size:46px">الهندسة الاجتماعية</h1>
+      <p class="lead">مو كل صوت يستحق ثقتك. تعال اكتشف حيل أكثر، وجرّب بنفسك لعبة "تثق ولا ما تثق؟"</p>
+    </div>
+    <div class="details">
+      <div class="d"><small>اليوم</small><b>الثلاثاء ٢٧ أكتوبر</b></div>
+      <div class="d"><small>الوقت</small><b>١٠ ص – ١٢ م</b></div>
+      <div class="d"><small>المكان</small><b>قاعة الجوهرة</b></div>
+    </div>
+    <div class="foot"><b>نشوفك في البوث!</b><span>مجموعة ٣١ · جامعة أم القرى</span></div>
+  </section>
+
+</div></div>
+<script>
+  var ids = ['notif','b1','b2','b3'];
+  var delays = [700, 2600, 4000, 5600];
+  var tick;
+  ids.forEach(function(id, i){
+    setTimeout(function(){
+      var typing = document.getElementById('typing');
+      if (i === 0) {
+        document.getElementById('notifZone').classList.add('show');
+        setTimeout(function(){ document.getElementById('notif').classList.add('buzz'); }, 450);
+        try { if (navigator.vibrate) navigator.vibrate([120, 80, 120]); } catch (e) {}
+        setTimeout(function(){ typing.style.display = 'block'; document.getElementById('status').textContent = 'يكتب…'; }, 1200);
+        return;
+      }
+      typing.style.display = 'none';
+      document.getElementById(id).classList.add('show');
+      if (i < ids.length - 1) {
+        setTimeout(function(){ typing.style.display = 'block'; document.getElementById('status').textContent = 'يكتب…'; }, 300);
+      }
+      if (i === ids.length - 1) {
+        document.getElementById('status').textContent = 'متصل الآن';
+        startTimer();
+      }
+    }, delays[i]);
+  });
+
+  function startTimer(){
+    document.getElementById('timer').style.display = 'block';
+    document.getElementById('actions').style.display = 'flex';
+    var left = 300;
+    tick = setInterval(function(){
+      left = Math.max(0, left - 1);
+      var m = Math.floor(left / 60), s = left % 60;
+      document.getElementById('clock').textContent = m + ':' + (s < 10 ? '0' : '') + s;
+      if (left === 0) clearInterval(tick);
+    }, 1000);
+  }
+
+  function show(kind){
+    clearInterval(tick);
+    var fell = kind === 'fell';
+    document.getElementById('test').style.display = 'none';
+    var r = document.getElementById('reveal');
+    r.className = 'reveal ' + kind;
+    document.getElementById('rh').textContent = fell ? 'طحت فيها! شكلك تبي قهوة' : 'صاحي وما عليك كلام!';
+    document.getElementById('rt').textContent = fell
+      ? 'ما فيه ريم ولا قائمة حضور 😅 لو كانت حقيقية، كان هالرمز فتح حسابك لشخص غريب. ولا جهة رسمية تطلب منك رمز التحقق أبد.'
+      : 'كفو! ما فيه ريم ولا قائمة حضور، وكان كل شي فخ. ولا جهة رسمية تطلب منك رمز التحقق أبد.';
+    var inv = document.getElementById('invite');
+    inv.style.display = 'flex';
+    inv.className = 'fade';
+    window.scrollTo(0, 0);
+  }
+</script>
+</body>
+</html>
